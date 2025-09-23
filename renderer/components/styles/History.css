@@ -1,0 +1,39 @@
+.history {
+  margin-top: 30px;
+  padding-top: 10px;
+  border-top: 2px solid #ddd;
+  font-family: sans-serif;
+}
+
+.history h2 {
+  margin-bottom: 10px;
+}
+
+.history table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.history th,
+.history td {
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  text-align: left;
+}
+
+.history th {
+  background-color: #f0f0f0;
+}
+
+.history tr:nth-child(even) {
+  background-color: #fafafa;
+}
+
+.history tr:hover {
+  background-color: #f5f5f5;
+}
+
+.empty {
+  font-style: italic;
+  color: #777;
+}
