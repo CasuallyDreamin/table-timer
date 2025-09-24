@@ -1,6 +1,6 @@
 const { app, BrowserWindow, ipcMain } = require("electron");
 const path = require("path");
-const { logSession, getRecentSessions } = require("./database");
+const { logSession, getRecentSessions, getTotalSessions } = require("./database");
 
 function createWindow() {
   const win = new BrowserWindow({

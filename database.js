@@ -5,16 +5,16 @@ const knexLib = require("knex");
 const knex = knexLib({
   client: "sqlite3",
   connection: {
-    filename: path.join(__dirname, "table-timer.db")
+    filename: path.join(__dirname, "table-timer.db"),
   },
-  useNullAsDefault: true
+  useNullAsDefault: true,
 });
 
 // Create table if it doesn't exist
 async function init() {
   const exists = await knex.schema.hasTable("sessions");
   if (!exists) {
-    await knex.schema.createTable("sessions", table => {
+    await knex.schema.createTable("sessions", (table) => {
       table.increments("id").primary();
       table.string("table_name");
       table.integer("duration");
@@ -24,25 +24,40 @@ async function init() {
 }
 
 // Call init immediately
-init().catch(err => console.error("DB initialization failed:", err));
+init().catch((err) => console.error("DB initialization failed:", err));
 
-// Log a session
+/**
+ * Insert a new session into the DB
+ */
 async function logSession({ table_name, duration, ended_at }) {
   await knex("sessions").insert({ table_name, duration, ended_at });
 }
 
-// Get recent sessions with optional pagination
+/**
+ * Get sessions with optional pagination
+ * - limit: how many rows to fetch
+ * - offset: skip N rows
+ * Always sorted by newest first.
+ */
 async function getRecentSessions(limit = 50, offset = 0) {
-  return await knex("sessions")
+  const rows = await knex("sessions")
     .orderBy("id", "desc")
     .limit(limit)
     .offset(offset);
+  const total = await getTotalSessions();
+  return { rows, total };
 }
 
-// Get total number of sessions
+/**
+ * Count total sessions in DB
+ */
 async function getTotalSessions() {
   const [{ count }] = await knex("sessions").count("id as count");
   return Number(count);
 }
 
-module.exports = { logSession, getRecentSessions, getTotalSessions };
+module.exports = {
+  logSession,
+  getRecentSessions,
+  getTotalSessions,
+};
